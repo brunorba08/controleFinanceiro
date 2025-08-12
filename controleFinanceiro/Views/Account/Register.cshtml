@@ -1,0 +1,20 @@
+﻿@{
+    ViewData["Title"] = "Cadastro";
+}
+
+<h2>Cadastro</h2>
+<form method="post" action="/Account/Register">
+    <div>
+        <label>Nome:</label>
+        <input type="text" name="Nome" required />
+    </div>
+    <div>
+        <label>Email:</label>
+        <input type="email" name="Email" required />
+    </div>
+    <div>
+        <label>Senha:</label>
+        <input type="password" name="Senha" required />
+    </div>
+    <button type="submit">Cadastrar</button>
+</form>
