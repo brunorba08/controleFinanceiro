@@ -7,40 +7,118 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/controleFinanceiro.styles.css" asp-append-version="true" />
+
+    <!-- Ícones Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <style>
+       .login-navbar-button {
+    background-color: transparent;
+    color: #3654ff;
+    width: 7.5em;      
+    height: 2.5em;      
+    border: 2px solid #3654ff;
+    border-radius: 8px;  
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6em;
+    position: relative;
+    transition: all 0.4s ease;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.85rem;  
+}
+
+.login-navbar-button:hover {
+    background-color: #3654ff;
+    color: #fff;
+}
+
+.login-navbar-button svg {
+    width: 1.2em;    
+    transition: all 0.4s ease;
+}
+
+.login-navbar-button:hover svg {
+    transform: translateX(4px);
+}
+
+.login-navbar-button .text {
+    margin: 0;
+}
+
+        .navbar-brand {
+            position: relative; 
+            height: 50px; 
+        }
+
+            .navbar-brand img {
+                position: relative;
+                top: 50%;
+                left: 25%;
+                transform: translateY(-50%) scale(2);
+                height: 80px;
+                max-height: none;
+            }
+    </style>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">controleFinanceiro</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/imagens/controleFinanceiro.png" alt="Controle Financeiro">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+
+
+                    <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a href="/Account/Login" class="login-navbar-button">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"></path>
+                                </svg>
+                                <div class="text">Login</div>
+                            </a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - controleFinanceiro - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="border-top footer bg-light text-muted py-3">
+        <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
+            <div class="mb-2 mb-md-0">
+                &copy; 2025 - controleFinanceiro | Criado por <strong>Bruno Ribeiro</strong>
+            </div>
+            <div>
+                <a href="tel:+5511940072543" class="text-muted me-3">
+                    <i class="bi bi-telephone-fill"></i> +55 11 94007-2543
+                </a>
+                <a href="mailto:brunoribeiroba080803@gmail.com" class="text-muted me-3">
+                    <i class="bi bi-envelope-fill"></i> brunoribeiroba080803@gmail.com
+                </a>
+                <a href="https://www.linkedin.com/in/bruno-ribeiro-a5b828192" target="_blank" class="text-muted">
+                    <i class="bi bi-linkedin"></i> LinkedIn
+                </a>
+            </div>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

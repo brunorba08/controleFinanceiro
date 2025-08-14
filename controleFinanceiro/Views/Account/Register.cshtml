@@ -1,53 +1,76 @@
 ﻿@{
     ViewData["Title"] = "Cadastro";
 }
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js">
+
 <style>
-
-    form {
-        background-color: white;
-        padding: 30px 40px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 51, 102, 0.3);
-        width: 320px;
+    .cadastro-container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 85vh;
+        padding: 40px 20px 80px 20px; /* espaço inferior para o footer */
+        gap: 40px;
+        box-sizing: border-box;
     }
 
-    h2 {
-        text-align: center;
-        margin-bottom: 25px;
+    /* Texto motivacional */
+    .cadastro-text {
+        width: 40%;
+        font-size: 18px;
         color: #004080;
+        line-height: 1.5;
     }
 
-    label {
-        display: block;
-        margin-bottom: 6px;
-        font-weight: 600;
+    /* Caixa do formulário */
+    .cadastro-form {
+        width: 60%;
+        background-color: white;
+        padding: 40px 50px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 51, 102, 0.3);
+        display: flex;
+        flex-direction: column;
     }
 
-    input[type="text"],
-    input[type="email"],
-    input[type="password"] {
-        width: 100%;
-        padding: 8px 12px;
-        margin-bottom: 20px;
-        border: 1.8px solid #004080;
-        border-radius: 4px;
-        font-size: 14px;
-        transition: border-color 0.3s ease;
-    }
+        .cadastro-form h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #004080;
+        }
 
-    input[type="text"]:focus,
-    input[type="email"]:focus,
-    input[type="password"]:focus {
-        border-color: #007bff;
-        outline: none;
-    }
+        .cadastro-form label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
 
-    button {
+        .cadastro-form input[type="text"],
+        .cadastro-form input[type="email"],
+        .cadastro-form input[type="password"],
+        .cadastro-form input[type="tel"] {
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 20px;
+            border: 1.8px solid #004080;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .cadastro-form input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+    .cadastro-btn {
         width: 100%;
         background-color: #0059b3;
         color: white;
         font-weight: 700;
-        padding: 10px 0;
+        padding: 12px 0;
         border: none;
         border-radius: 5px;
         font-size: 16px;
@@ -55,25 +78,89 @@
         transition: background-color 0.3s ease;
     }
 
-    button:hover {
-        background-color: #003d7a;
-    }
+        .cadastro-btn:hover {
+            background-color: #003d7a;
+        }
 </style>
 
+<div class="cadastro-container">
+    <div class="cadastro-text">
+        <h3>Você está a um passo de organizar sua vida!</h3>
+        <p>
+            Ao se cadastrar, você terá acesso a um sistema completo para controlar suas finanças de forma prática e segura.
+            Organize suas contas, acompanhe seus gastos, planeje seu orçamento e tome decisões financeiras mais inteligentes.
+            Preencha os campos abaixo e comece agora mesmo a transformar sua rotina financeira!
+        </p>
+    </div>
 
-<h2>Cadastro</h2>
-<form method="post" action="/Account/Register">
-    <div>
-        <label>Nome:</label>
-        <input type="text" name="Nome" required />
-    </div>
-    <div>
-        <label>Email:</label>
-        <input type="email" name="Email" required />
-    </div>
-    <div>
-        <label>Senha:</label>
-        <input type="password" name="Senha" required />
-    </div>
-    <button type="submit">Cadastrar</button>
-</form>
+    <form class="cadastro-form" method="post" action="/Account/Register" onsubmit="return validarSenha()">
+        <h2>Faça seu cadastro !</h2>
+        <div>
+            <label>Nome:</label>
+            <input type="text" name="Nome" required />
+        </div>
+        <div>
+            <label>Email:</label>
+            <input type="email" name="Email" required />
+        </div>
+        <div>
+            <label>Telefone:</label>
+            <input type="tel" id="telefone" name="Telefone" placeholder="(11) 99999-9999" maxlength="11" required />
+        </div>
+        <div>
+            <label>Senha:</label>
+            <input type="password" id="senha" name="Senha" required />
+        </div>
+        <div>
+            <label>Confirmar Senha:</label>
+            <input type="password" id="confirmarSenha" required />
+        </div>
+        <button type="submit" class="cadastro-btn">Cadastrar</button>
+    </form>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('#telefone').mask('(00) 00000-0000');
+
+        $('#telefone').on('input', function() {
+            var numeros = $(this).val().replace(/\D/g,''); 
+            if (numeros.length > 11) {
+                numeros = numeros.substring(0,11);
+            }
+            var formatado = numeros.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+            $(this).val(formatado);
+        });
+    });
+
+    function validarSenha() {
+        var senha = document.getElementById("senha").value;
+        var confirmar = document.getElementById("confirmarSenha").value;
+        var telefone = document.getElementById("telefone").value.replace(/\D/g,'');
+
+        if (senha !== confirmar) {
+            alert("As senhas não coincidem!");
+            return false;
+        }
+
+        if (telefone.length !== 11) {
+            alert("Digite um número de telefone válido com 11 dígitos.");
+            return false;
+        }
+
+        return true;
+    }
+
+    function validarSenha() {
+        var senha = document.getElementById("senha").value;
+        var confirmar = document.getElementById("confirmarSenha").value;
+
+        if (senha !== confirmar) {
+            alert("As senhas não coincidem!");
+            return false;
+        }
+        return true;
+    }
+</script>

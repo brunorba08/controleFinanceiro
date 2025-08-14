@@ -2,7 +2,250 @@
     ViewData["Title"] = "Página Inicial";
 }
 
-<div style="text-align:center; margin-top:50px;">
-    <h1>Bem-vindo ao Controle Financeiro</h1>
-    <a href="/Account/Login" class="btn btn-primary">Login</a>
+<style>
+    .button {
+        margin: 0;
+        height: auto;
+        background: transparent;
+        padding: 0;
+        border: none;
+        cursor: pointer;
+        --border-right: 6px;
+        --text-stroke-color: rgba(255,255,255,0.6);
+        --animation-color: #37FF8B;
+        --fs-size: 2em;
+        letter-spacing: 3px;
+        text-decoration: none;
+        font-size: var(--fs-size);
+        font-family: "Arial", sans-serif;
+        position: relative;
+        text-transform: uppercase;
+        color: transparent;
+        -webkit-text-stroke: 1px var(--text-stroke-color);
+    }
+        .button .hover-text {
+            position: absolute;
+            box-sizing: border-box;
+            color: var(--animation-color);
+            width: 0%;
+            inset: 0;
+            border-right: var(--border-right) solid var(--animation-color);
+            overflow: hidden;
+            transition: 0.5s;
+            -webkit-text-stroke: 1px var(--animation-color);
+        }
+
+        .button:hover .hover-text {
+            width: 100%;
+            filter: drop-shadow(0 0 23px var(--animation-color));
+        }
+
+    .hero {
+        text-align: center;
+        padding: 60px 20px;
+        background-color: #004080;
+        color: white;
+    }
+
+        .hero p {
+            font-size: 1.2em;
+            margin-bottom: 25px;
+        }
+
+        .hero a {
+            background-color: #ffcc00;
+            color: #003366;
+            padding: 12px 25px;
+            font-size: 18px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+            .hero a:hover {
+                background-color: #e6b800;
+            }
+
+    .section {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 50px 20px;
+        max-width: 1100px;
+        margin: auto;
+    }
+
+        .section img {
+            width: 400px;
+            max-width: 100%;
+            border-radius: 8px;
+            margin: 0 20px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+        text-align: -webkit-center;
+        color:#37a0ff;
+        }
+
+        p{
+        text-align: -webkit-center;
+        }
+
+    .section-text {
+        max-width: 500px;
+        font-size: 1.1em;
+        line-height: 1.6;
+    }
+
+    .section:nth-child(even) {
+        flex-direction: row-reverse;
+    }
+
+    .title-animated {
+        --border-right: 6px;
+        --text-stroke-color: rgba(255, 255, 255, 0.6);
+        --animation-color: #37a0ff; 
+        --fs-size: 2.5em;
+        letter-spacing: 3px;
+        font-size: var(--fs-size);
+        font-family: "Arial", sans-serif;
+        position: relative;
+        text-transform: uppercase;
+        display: inline-block;
+        line-height: 1.2;
+    }
+
+        .title-animated .title-stroke {
+            color: transparent;
+            -webkit-text-stroke: 1px var(--text-stroke-color);
+            white-space: nowrap;
+            display: inline-block;
+        }
+
+        .title-animated .title-fill {
+            position: absolute;
+            box-sizing: border-box;
+            color: var(--animation-color);
+            width: 0%;
+            inset: 0;
+            border-right: var(--border-right) solid var(--animation-color);
+            overflow: hidden;
+            transition: 0.5s ease;
+            -webkit-text-stroke: 1px var(--animation-color);
+            white-space: nowrap;
+            display: inline-block;
+        }
+
+        .title-animated:hover .title-fill {
+            width: 100%;
+            filter: drop-shadow(0 0 23px var(--animation-color));
+        }
+
+    .cards-container {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-top: 30px;
+    }
+
+    .card {
+        background-color: #f4f6f8;
+        border-radius: 10px;
+        padding: 20px;
+        flex: 1 1 calc(25% - 20px);
+        box-shadow: 0px 4px 8px rgba(0,0,0,0.05);
+        text-align: center;
+        transition: transform 0.2s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+    .icon {
+        font-size: 32px;
+        margin-bottom: 10px;
+    }
+
+    .card h3 {
+        font-size: 18px;
+        margin-bottom: 10px;
+        color: #0a2e4d;
+    }
+
+    .card p {
+        font-size: 14px;
+        color: #555;
+    }
+
+</style>
+
+<div class="hero">
+    <h1 class="title-animated">
+        <span class="title-stroke">&nbsp;Bem-vindo ao Controle Financeiro&nbsp;</span>
+        <span aria-hidden="true" class="title-fill">&nbsp;Bem-vindo ao Controle Financeiro&nbsp;</span>
+    </h1>
+    <p>Organize seu dinheiro, alcance seus sonhos e viva sem preocupações.</p>
+    <a href="/Account/Register">Cadastre-se Agora</a>
 </div>
+
+<div class="section">
+    <img src="~/imagens/finance1.jpg" alt="Controle financeiro" />
+    <div class="section-text">
+        <h2>Tenha controle total sobre suas finanças</h2>
+        <p>Com nosso sistema, você acompanha seus gastos, identifica desperdícios e planeja cada passo rumo à liberdade financeira. Não importa se você quer economizar para uma viagem, trocar de carro ou investir no futuro — tudo começa pelo controle.</p>
+    </div>
+</div>
+
+<div class="section">
+    <div class="section-text">
+        <h2>Invista com inteligência</h2>
+        <p>Aprenda a investir de forma segura e inteligente, com base nos seus objetivos e perfil. Organizar suas finanças é o primeiro passo para multiplicar seu patrimônio.</p>
+    </div>
+</div>
+
+<div class="section">
+    <div class="section-text">
+        <h2>Planeje e conquiste seus objetivos</h2>
+        <p>O planejamento é a chave para realizar grandes conquistas. Nosso sistema oferece relatórios claros, gráficos intuitivos e ferramentas para definir metas financeiras que realmente funcionam para você.</p>
+    </div>
+    <img src="~/imagens/finance2.jpg" alt="Economia e planejamento" />
+</div>
+
+<div class="section">
+    <div class="section-text">
+        <h2>Mais tranquilidade, menos estresse</h2>
+        <p>Quando você sabe exatamente onde seu dinheiro está, a preocupação vai embora e sobra mais tempo e energia para focar no que realmente importa: aproveitar a vida.</p>
+    </div>
+</div>
+
+<section class="section">
+    <div class="cards-container">
+        <div class="card">
+            <div class="icon">💰</div>
+            <h3>Finanças sempre no azul</h3>
+            <p>Mantenha suas contas sob controle, com relatórios claros e atualizações automáticas para nunca se perder.</p>
+        </div>
+
+        <div class="card">
+            <div class="icon">📊</div>
+            <h3>Contabilidade sem dor de cabeça</h3>
+            <p>Integração direta com o contador para garantir que suas obrigações fiscais sejam cumpridas sem esforço.</p>
+        </div>
+
+        <div class="card">
+            <div class="icon">📂</div>
+            <h3>Organização sem bagunça</h3>
+            <p>Tudo no lugar certo, fácil de acessar, com a segurança que seu negócio merece.</p>
+        </div>
+
+        <div class="card">
+            <div class="icon">⚙️</div>
+            <h3>Adeus tarefas manuais</h3>
+            <p>Automatize processos repetitivos e ganhe mais tempo para focar no crescimento da sua empresa.</p>
+        </div>
+    </div>
+</section>
+

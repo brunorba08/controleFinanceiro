@@ -23,11 +23,12 @@ namespace ControleFinanceiro.Controllers
         [HttpPost]
         public IActionResult Login(string Email, string Senha)
         {
-            var usuario = _context.Usuarios.FirstOrDefault(u => u.Email == Email && u.Senha == Senha);
+            var usuario = _context.Usuarios
+                .FirstOrDefault(u => u.Email == Email && u.Senha == Senha);
 
             if (usuario != null)
             {
-                // Aqui no futuro pode colocar autenticação de verdade
+                // No futuro, implementar autenticação de verdade
                 return RedirectToAction("Index", "Dashboard");
             }
 
@@ -47,10 +48,13 @@ namespace ControleFinanceiro.Controllers
         {
             if (ModelState.IsValid)
             {
+                usuario.DataHoraCadastro = DateTime.Now; // Garante data/hora
                 _context.Usuarios.Add(usuario);
                 _context.SaveChanges();
+
                 return RedirectToAction("Login");
             }
+
             return View(usuario);
         }
     }
