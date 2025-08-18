@@ -1,6 +1,7 @@
 ﻿using ControleFinanceiro.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity; // Para PasswordHasher
 
 namespace ControleFinanceiro.Controllers
 {
@@ -13,46 +14,70 @@ namespace ControleFinanceiro.Controllers
             _context = context;
         }
 
-        // GET: /Account/Login
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear(); // limpa a sessão
+            return RedirectToAction("Login", "Account");
+        }
+
+        // ---------- LOGIN ----------
+        [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
 
-        // POST: /Account/Login
         [HttpPost]
-        public IActionResult Login(string Email, string Senha)
+        public IActionResult Login(string email, string senha)
         {
-            var usuario = _context.Usuarios
-                .FirstOrDefault(u => u.Email == Email && u.Senha == Senha);
+            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(senha))
+            {
+                ViewBag.Erro = "Preencha todos os campos";
+                return View();
+            }
+
+            var usuario = _context.Usuarios.FirstOrDefault(u => u.Email == email);
 
             if (usuario != null)
             {
-                // No futuro, implementar autenticação de verdade
-                return RedirectToAction("Index", "Dashboard");
+                var passwordHasher = new PasswordHasher<Usuario>();
+                var result = passwordHasher.VerifyHashedPassword(usuario, usuario.Senha, senha);
+
+                if (result == PasswordVerificationResult.Success)
+                {
+                    // 👉 Salva o usuário logado na sessão
+                    HttpContext.Session.SetInt32("UsuarioId", usuario.Id);
+
+                    // Redireciona para o dashboard
+                    return RedirectToAction("Index", "Dashboard");
+                }
             }
 
-            ViewBag.Erro = "Usuário ou senha inválidos.";
+            ViewBag.Erro = "Usuário ou senha inválidos";
             return View();
         }
 
-        // GET: /Account/Register
+        // ---------- REGISTER ----------
+        [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
 
-        // POST: /Account/Register
         [HttpPost]
         public IActionResult Register(Usuario usuario)
         {
             if (ModelState.IsValid)
             {
-                usuario.DataHoraCadastro = DateTime.Now; // Garante data/hora
+                // Criptografa a senha antes de salvar
+                var passwordHasher = new PasswordHasher<Usuario>();
+                usuario.Senha = passwordHasher.HashPassword(usuario, usuario.Senha);
+
                 _context.Usuarios.Add(usuario);
                 _context.SaveChanges();
 
-                return RedirectToAction("Login");
+                TempData["Sucesso"] = "Usuário cadastrado com sucesso!";
+                return RedirectToAction("Register");
             }
 
             return View(usuario);

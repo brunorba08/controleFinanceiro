@@ -10,25 +10,25 @@
         display: flex;
         justify-content: center;
         align-items: flex-start;
-        min-height: 85vh;
-        padding: 40px 20px 80px 20px; /* espaço inferior para o footer */
-        gap: 40px;
+        padding: 40px 20px 70px 20px;
+        gap: 60px;
         box-sizing: border-box;
     }
 
     /* Texto motivacional */
     .cadastro-text {
-        width: 40%;
+        width: 45%;
         font-size: 18px;
         color: #004080;
-        line-height: 1.5;
+        line-height: 1.8; /* aumenta espaço entre linhas */
+        margin-bottom: 20px;
     }
 
     /* Caixa do formulário */
     .cadastro-form {
-        width: 60%;
+        width: 45%; /* diminui o tamanho do formulário */
         background-color: white;
-        padding: 40px 50px;
+        padding: 30px 35px; /* diminui padding */
         border-radius: 10px;
         box-shadow: 0 0 15px rgba(0, 51, 102, 0.3);
         display: flex;
@@ -37,7 +37,7 @@
 
         .cadastro-form h2 {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             color: #004080;
         }
 
@@ -81,6 +81,86 @@
         .cadastro-btn:hover {
             background-color: #003d7a;
         }
+
+    .cadastro-form .custom-control {
+        position: relative;
+        width: 100%;
+        margin-bottom: 25px;
+    }
+
+        .cadastro-form .custom-control .input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .cadastro-form .custom-control input {
+            background-color: transparent;
+            border: 0;
+            border-bottom: 2px #004080 solid;
+            width: 100%;
+            padding: 15px 35px 15px 30px;
+            font-size: 16px;
+            color: #004080;
+        }
+
+            .cadastro-form .custom-control input:focus,
+            .cadastro-form .custom-control input:valid {
+                outline: 0;
+                border-bottom-color: #007bff;
+            }
+
+        .cadastro-form .custom-control label {
+            position: absolute;
+            top: 15px;
+            left: 30px;
+            pointer-events: none;
+        }
+
+            .cadastro-form .custom-control label span {
+                display: inline-block;
+                font-size: 16px;
+                min-width: 5px;
+                color: #004080;
+                transition: 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            }
+
+        .cadastro-form .custom-control input:focus + label span,
+        .cadastro-form .custom-control input:valid + label span {
+            color: #007bff;
+            transform: translateY(-30px);
+        }
+
+        .cadastro-form .custom-control i.left-icon {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            color: #004080;
+            font-size: 18px;
+        }
+
+        .cadastro-form .custom-control i.eye-icon {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            color: #004080;
+            font-size: 18px;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+    .cadastro-image {
+        width: 80%;
+        margin-top: 20px;
+        text-align: center;
+    }
+
+        .cadastro-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
 </style>
 
 <div class="cadastro-container">
@@ -91,30 +171,97 @@
             Organize suas contas, acompanhe seus gastos, planeje seu orçamento e tome decisões financeiras mais inteligentes.
             Preencha os campos abaixo e comece agora mesmo a transformar sua rotina financeira!
         </p>
+
+        <div class="cadastro-image">
+            <img src="~/imagens/formulario.png" alt="Controle Financeiro">
+        </div>
     </div>
 
     <form class="cadastro-form" method="post" action="/Account/Register" onsubmit="return validarSenha()">
-        <h2>Faça seu cadastro !</h2>
-        <div>
-            <label>Nome:</label>
+        <h2>Faça seu cadastro!</h2>
+
+        <!-- NOME -->
+        <div class="custom-control">
+            <i class="bi bi-person-fill left-icon"></i>
             <input type="text" name="Nome" required />
+            <label>
+                <span style="transition-delay:0ms">N</span>
+                <span style="transition-delay:50ms">o</span>
+                <span style="transition-delay:100ms">m</span>
+                <span style="transition-delay:150ms">e</span>
+                <span style="transition-delay:200ms">:</span>
+            </label>
         </div>
-        <div>
-            <label>Email:</label>
+
+        <!-- EMAIL -->
+        <div class="custom-control">
+            <i class="bi bi-envelope-fill left-icon"></i>
             <input type="email" name="Email" required />
+            <label>
+                <span style="transition-delay:0ms">E</span>
+                <span style="transition-delay:50ms">m</span>
+                <span style="transition-delay:100ms">a</span>
+                <span style="transition-delay:150ms">i</span>
+                <span style="transition-delay:200ms">l</span>
+                <span style="transition-delay:250ms">:</span>
+            </label>
         </div>
-        <div>
-            <label>Telefone:</label>
-            <input type="tel" id="telefone" name="Telefone" placeholder="(11) 99999-9999" maxlength="11" required />
+
+        <!-- TELEFONE -->
+        <div class="custom-control">
+            <i class="bi bi-telephone-fill left-icon"></i>
+            <input type="tel" id="telefone" name="Telefone"  maxlength="11" required />
+            <label>
+                <span style="transition-delay:0ms">T</span>
+                <span style="transition-delay:50ms">e</span>
+                <span style="transition-delay:100ms">l</span>
+                <span style="transition-delay:150ms">e</span>
+                <span style="transition-delay:200ms">f</span>
+                <span style="transition-delay:250ms">o</span>
+                <span style="transition-delay:300ms">n</span>
+                <span style="transition-delay:350ms">e</span>
+                <span style="transition-delay:400ms">:</span>
+            </label>
         </div>
-        <div>
-            <label>Senha:</label>
-            <input type="password" id="senha" name="Senha" required />
+
+        <!-- SENHA -->
+        <div class="custom-control">
+            <i class="bi bi-lock-fill left-icon"></i>
+            <div class="input-wrapper" style="position: relative;">
+                <input type="password" id="senha" name="Senha" required />
+                <label>
+                    <span style="transition-delay:0ms">S</span>
+                    <span style="transition-delay:50ms">e</span>
+                    <span style="transition-delay:100ms">n</span>
+                    <span style="transition-delay:150ms">h</span>
+                    <span style="transition-delay:200ms">a</span>
+                    <span style="transition-delay:250ms">:</span>
+                </label>
+                <i class="bi bi-eye eye-icon" id="toggleSenha"></i>
+            </div>
         </div>
-        <div>
-            <label>Confirmar Senha:</label>
-            <input type="password" id="confirmarSenha" required />
+
+        <!-- CONFIRMAR SENHA -->
+        <div class="custom-control">
+            <i class="bi bi-lock-fill left-icon"></i>
+            <div class="input-wrapper" style="position: relative;">
+                <input type="password" id="confirmarSenha" required />
+                <label>
+                    <span style="transition-delay:0ms">C</span>
+                    <span style="transition-delay:50ms">o</span>
+                    <span style="transition-delay:100ms">n</span>
+                    <span style="transition-delay:150ms">f</span>
+                    <span style="transition-delay:200ms">i</span>
+                    <span style="transition-delay:250ms">r</span>
+                    <span style="transition-delay:300ms">m</span>
+                    <span style="transition-delay:350ms">a</span>
+                    <span style="transition-delay:400ms">r</span>
+                    <span style="transition-delay:450ms">:</span>
+                </label>
+                <i class="bi bi-eye eye-icon" id="toggleConfirmarSenha"></i>
+            </div>
         </div>
+
         <button type="submit" class="cadastro-btn">Cadastrar</button>
     </form>
 </div>
@@ -122,18 +269,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 <script>
-    $(document).ready(function(){
-        $('#telefone').mask('(00) 00000-0000');
-
-        $('#telefone').on('input', function() {
-            var numeros = $(this).val().replace(/\D/g,''); 
-            if (numeros.length > 11) {
-                numeros = numeros.substring(0,11);
-            }
-            var formatado = numeros.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-            $(this).val(formatado);
-        });
-    });
+ 
 
     function validarSenha() {
         var senha = document.getElementById("senha").value;
@@ -153,14 +289,26 @@
         return true;
     }
 
-    function validarSenha() {
-        var senha = document.getElementById("senha").value;
-        var confirmar = document.getElementById("confirmarSenha").value;
+        document.getElementById('toggleSenha').addEventListener('click', function() {
+        const input = document.getElementById('senha');
+        this.classList.toggle('bi-eye-slash');
+        this.classList.toggle('bi-eye');
+        input.type = input.type === 'password' ? 'text' : 'password';
+    });
 
-        if (senha !== confirmar) {
-            alert("As senhas não coincidem!");
-            return false;
-        }
-        return true;
+    document.getElementById('toggleConfirmarSenha').addEventListener('click', function() {
+        const input = document.getElementById('confirmarSenha');
+        this.classList.toggle('bi-eye-slash');
+        this.classList.toggle('bi-eye');
+        input.type = input.type === 'password' ? 'text' : 'password';
+    });
+
+
+    // Alert de sucesso após cadastro
+    @if (TempData["Sucesso"] != null)
+    {
+            <text>
+                alert("@TempData["Sucesso"]");
+            </text>
     }
 </script>

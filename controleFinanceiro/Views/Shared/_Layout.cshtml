@@ -7,51 +7,43 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/controleFinanceiro.styles.css" asp-append-version="true" />
-
-    <!-- Ícones Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
     <style>
-       .login-navbar-button {
-    background-color: transparent;
-    color: #3654ff;
-    width: 7.5em;      
-    height: 2.5em;      
-    border: 2px solid #3654ff;
-    border-radius: 8px;  
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.6em;
-    position: relative;
-    transition: all 0.4s ease;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.85rem;  
-}
+        .login-navbar-button {
+            background-color: transparent;
+            color: #3654ff;
+            width: 7.5em;
+            height: 2.5em;
+            border: 2px solid #3654ff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6em;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.4s ease;
+        }
 
-.login-navbar-button:hover {
-    background-color: #3654ff;
-    color: #fff;
-}
+            .login-navbar-button:hover {
+                background-color: #3654ff;
+                color: #fff;
+            }
 
-.login-navbar-button svg {
-    width: 1.2em;    
-    transition: all 0.4s ease;
-}
+            .login-navbar-button svg {
+                width: 1.2em;
+                transition: all 0.4s ease;
+            }
 
-.login-navbar-button:hover svg {
-    transform: translateX(4px);
-}
-
-.login-navbar-button .text {
-    margin: 0;
-}
+            .login-navbar-button:hover svg {
+                transform: translateX(4px);
+            }
 
         .navbar-brand {
-            position: relative; 
-            height: 50px; 
+            position: relative;
+            height: 50px;
         }
 
             .navbar-brand img {
@@ -68,31 +60,66 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
+                <!-- Logo à esquerda -->
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                     <img src="~/imagens/controleFinanceiro.png" alt="Controle Financeiro">
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
 
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <!-- Espaço entre logo e botões -->
+                <div class="d-flex ms-auto align-items-center">
+                    @if (ViewBag.UsuarioLogado != null)
+                    {
+                        <!-- Botão Logout -->
+                        <a href="/Account/Logout" class="login-navbar-button me-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3H6.75A2.25 2.25 0 004.5 5.25v13.5A2.25 2.25 0 006.75 21h6.75a2.25 2.25 0 002.25-2.25V15m0-6l6 6m0 0l-6 6m6-6H9" />
+                            </svg>
+                            <div class="text">Logout</div>
+                        </a>
 
-
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a href="/Account/Login" class="login-navbar-button">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"></path>
-                                </svg>
-                                <div class="text">Login</div>
-                            </a>
-                        </li>
-                    </ul>
+                        <!-- Botão hamburguer -->
+                        <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuHamburguer">
+                            ☰
+                        </button>
+                    }
+                    else
+                    {
+                        <!-- Botões Login/Cadastro -->
+                        <a href="/Account/Register" class="login-navbar-button me-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                            <div class="text">Cadastro</div>
+                        </a>
+                        <a href="/Account/Login" class="login-navbar-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
+                            </svg>
+                            <div class="text">Login</div>
+                        </a>
+                    }
                 </div>
             </div>
         </nav>
     </header>
+
+    <!-- Offcanvas menu para usuários logados -->
+    @if (ViewBag.UsuarioLogado != null)
+    {
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="menuHamburguer">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title">Menu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+            </div>
+            <div class="offcanvas-body">
+                <ul class="list-unstyled">
+                    <li><a href="/Dashboard/Index" class="text-decoration-none">Dashboard</a></li>
+                    <li><a href="/Transacao/Index" class="text-decoration-none">Minhas Transações</a></li>
+                    <li><a href="/Transacao/Adicionar" class="text-decoration-none">Adicionar Transação</a></li>
+                </ul>
+            </div>
+        </div>
+    }
 
     <div class="container">
         <main role="main" class="pb-3">
@@ -103,17 +130,20 @@
     <footer class="border-top footer bg-light text-muted py-3">
         <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
             <div class="mb-2 mb-md-0">
-                &copy; 2025 - controleFinanceiro | Criado por <strong>Bruno Ribeiro</strong>
+                &copy; 2025 - controleFinanceiro | Criado por
+                <a href="https://brunorba08.github.io/portfolio" target="_blank" style="text-decoration:none; color:inherit;">
+                    <strong>Bruno Ribeiro</strong>
+                </a>
             </div>
             <div>
                 <a href="tel:+5511940072543" class="text-muted me-3">
-                    <i class="bi bi-telephone-fill"></i> +55 11 94007-2543
+                    <i class="bi bi-telephone-fill text-success"></i> +55 11 94007-2543
                 </a>
                 <a href="mailto:brunoribeiroba080803@gmail.com" class="text-muted me-3">
-                    <i class="bi bi-envelope-fill"></i> brunoribeiroba080803@gmail.com
+                    <i class="bi bi-envelope-fill text-danger"></i> brunoribeiroba080803@gmail.com
                 </a>
                 <a href="https://www.linkedin.com/in/bruno-ribeiro-a5b828192" target="_blank" class="text-muted">
-                    <i class="bi bi-linkedin"></i> LinkedIn
+                    <i class="bi bi-linkedin" style="color:#0a66c2;"></i> LinkedIn
                 </a>
             </div>
         </div>

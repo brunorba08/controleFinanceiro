@@ -1,0 +1,11 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+< h2 > Bem - vindo, @ViewBag.UsuarioLogado! </ h2 >
+
+< p > Este é o seu painel de controle.</p>
+
+<a class= "btn btn-primary" href = "@Url.Action("Index", "Transacao")">
+    Ver Minhas Transações
+</a>
