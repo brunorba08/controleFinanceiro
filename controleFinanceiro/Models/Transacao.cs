@@ -20,5 +20,8 @@ namespace ControleFinanceiro.Models
         public string Tipo { get; set; } // Ganho ou Despesa
 
         public DateTime Data { get; set; } = DateTime.Now;
+
+        [StringLength(50)]
+        public string? FormaPagamento { get; set; } // Dinheiro, Cartão, PIX, Boleto
     }
 }

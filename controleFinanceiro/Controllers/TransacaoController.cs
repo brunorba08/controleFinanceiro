@@ -1,7 +1,7 @@
 ﻿using ControleFinanceiro.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
+using System;
 using System.Linq;
 
 namespace ControleFinanceiro.Controllers
@@ -65,6 +65,7 @@ namespace ControleFinanceiro.Controllers
 
         // Salvar transação
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Adicionar(Transacao transacao)
         {
             int? usuarioId = HttpContext.Session.GetInt32("UsuarioId");
@@ -73,15 +74,10 @@ namespace ControleFinanceiro.Controllers
 
             if (!ModelState.IsValid)
             {
-                // Debug pra ver o que está quebrando
-                var erros = ModelState.Values.SelectMany(v => v.Errors)
-                                             .Select(e => e.ErrorMessage)
-                                             .ToList();
-                TempData["Erro"] = string.Join(" | ", erros);
+                TempData["Erro"] = "Preencha todos os campos obrigatórios.";
                 return View(transacao);
             }
 
-            // Se quiser permitir datas customizadas, mantemos a data informada no formulário
             if (transacao.Data == default)
                 transacao.Data = DateTime.Now;
 
@@ -94,23 +90,32 @@ namespace ControleFinanceiro.Controllers
         }
 
         // GET: Transacao/Editar/5
+        [HttpGet]
         public IActionResult Editar(int id)
         {
-            var transacao = _context.Transacoes.FirstOrDefault(t => t.Id == id);
+            int? usuarioId = HttpContext.Session.GetInt32("UsuarioId");
+            if (usuarioId == null)
+                return RedirectToAction("Login", "Account");
+
+            var transacao = _context.Transacoes.FirstOrDefault(t => t.Id == id && t.UsuarioId == usuarioId);
             if (transacao == null)
                 return NotFound();
 
             return View(transacao);
         }
 
-        // POST: Transacao/Editar/5
+        // POST: Transacao/Editar
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Editar(Transacao model)
         {
+            int? usuarioId = HttpContext.Session.GetInt32("UsuarioId");
+            if (usuarioId == null)
+                return RedirectToAction("Login", "Account");
+
             if (ModelState.IsValid)
             {
-                var transacao = _context.Transacoes.FirstOrDefault(t => t.Id == model.Id);
+                var transacao = _context.Transacoes.FirstOrDefault(t => t.Id == model.Id && t.UsuarioId == usuarioId);
                 if (transacao == null)
                     return NotFound();
 
@@ -118,18 +123,28 @@ namespace ControleFinanceiro.Controllers
                 transacao.Valor = model.Valor;
                 transacao.Tipo = model.Tipo;
                 transacao.Data = model.Data;
+                transacao.FormaPagamento = model.FormaPagamento; // ✅ mantém campo atualizado
 
                 _context.SaveChanges();
+
+                TempData["Sucesso"] = "Transação editada com sucesso!";
                 return RedirectToAction("Index");
             }
+
+            TempData["Erro"] = "Erro ao editar a transação.";
             return View(model);
         }
 
+        // POST: Transacao/Excluir
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Excluir(int id)
         {
-            var transacao = _context.Transacoes.FirstOrDefault(t => t.Id == id);
+            int? usuarioId = HttpContext.Session.GetInt32("UsuarioId");
+            if (usuarioId == null)
+                return RedirectToAction("Login", "Account");
+
+            var transacao = _context.Transacoes.FirstOrDefault(t => t.Id == id && t.UsuarioId == usuarioId);
             if (transacao == null)
             {
                 TempData["Erro"] = "Transação não encontrada.";
@@ -142,6 +157,5 @@ namespace ControleFinanceiro.Controllers
             TempData["Sucesso"] = "Transação excluída com sucesso!";
             return RedirectToAction("Index");
         }
-
     }
 }

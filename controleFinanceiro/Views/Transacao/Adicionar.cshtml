@@ -1,9 +1,6 @@
-﻿@model ControleFinanceiro.Models.Transacao
-@{
+﻿@{
     ViewData["Title"] = "Adicionar Transação";
-
-    // Define o tipo padrão
-    var tipoSelecionado = Model?.Tipo ?? "Despesa"; 
+    var tipoSelecionado = ViewBag.Tipo ?? "Despesa";
 }
 
 <h2>Adicionar Transação</h2>
@@ -11,49 +8,38 @@
 <form asp-action="Adicionar" method="post">
     <div class="mb-3">
         <label>Descrição</label>
-        <input type="text" class="form-control" name="Descricao" value="@Model?.Descricao" required />
+        <input type="text" class="form-control" name="Descricao" value="@ViewBag.Descricao" required />
     </div>
 
     <div class="mb-3">
         <label>Valor</label>
-        <input type="number" class="form-control" name="Valor" value="@Model?.Valor" step="0.01" required />
+        <input type="number" class="form-control" name="Valor" value="@ViewBag.Valor" step="0.01" required />
     </div>
 
     <div class="mb-3">
         <label>Tipo</label><br />
         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="Tipo" id="ganho" value="Ganho" @(tipoSelecionado == "Ganho" ? "checked=\"checked\"" : "") onchange="toggleFormaPagamento(this.value)">
+            <input class="form-check-input" type="radio" name="Tipo" id="ganho" value="Ganho"
+                   @(tipoSelecionado == "Ganho" ? "checked" : "") onchange="toggleFormaPagamento(this.value)">
             <label class="form-check-label" for="ganho">Ganho (+)</label>
         </div>
         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="Tipo" id="despesa" value="Despesa" @(tipoSelecionado == "Despesa" ? "checked=\"checked\"" : "") onchange="toggleFormaPagamento(this.value)">
+            <input class="form-check-input" type="radio" name="Tipo" id="despesa" value="Despesa"
+                   @(tipoSelecionado == "Despesa" ? "checked" : "") onchange="toggleFormaPagamento(this.value)">
             <label class="form-check-label" for="despesa">Despesa (-)</label>
         </div>
     </div>
 
-    <!-- Forma de Pagamento (aparece só se for despesa) -->
     <div class="mb-3" id="formaPagamentoDiv" style="display:@(tipoSelecionado == "Despesa" ? "block" : "none")">
         <label>Forma de Pagamento</label>
-<select class="form-control" name="FormaPagamento" required>
-    @: <option value="" @(string.IsNullOrEmpty(Model?.FormaPagamento) ? "selected" : "")>Selecione</option>
-    @: <option value="Dinheiro" @(Model?.FormaPagamento == "Dinheiro" ? "selected" : "")>Dinheiro</option>
-    @: <option value="Cartão" @(Model?.FormaPagamento == "Cartão" ? "selected" : "")>Cartão</option>
-    @: <option value="PIX" @(Model?.FormaPagamento == "PIX" ? "selected" : "")>PIX</option>
-    @: <option value="Boleto" @(Model?.FormaPagamento == "Boleto" ? "selected" : "")>Boleto</option>
-</select>
+        <select class="form-control" name="FormaPagamento">
+            <option value="">Selecione</option>
+            <option value="Dinheiro">Dinheiro</option>
+            <option value="Cartão">Cartão</option>
+            <option value="PIX">PIX</option>
+            <option value="Boleto">Boleto</option>
+        </select>
     </div>
 
     <button type="submit" class="btn btn-primary">Salvar</button>
 </form>
-
-@if (TempData["Sucesso"] != null)
-{
-    <div class="alert alert-success mt-3">@TempData["Sucesso"]</div>
-}
-
-<script>
-    function toggleFormaPagamento(tipo) {
-        const div = document.getElementById('formaPagamentoDiv');
-        div.style.display = (tipo === 'Despesa') ? 'block' : 'none';
-    }
-</script>
