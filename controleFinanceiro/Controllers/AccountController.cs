@@ -1,22 +1,29 @@
 ﻿using ControleFinanceiro.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity; // Para PasswordHasher
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
 
 namespace ControleFinanceiro.Controllers
 {
-    public class AccountController : Controller
+    // Herda do BaseController que já recebe IHttpContextAccessor
+    public class AccountController : BaseController
     {
         private readonly AppDbContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AccountController(AppDbContext context)
+        // Construtor agora também recebe o DbContext e IHttpContextAccessor
+        public AccountController(AppDbContext context, IHttpContextAccessor accessor) : base(accessor)
         {
             _context = context;
+            _httpContextAccessor = accessor;
         }
 
+        // ---------- LOGOUT ----------
         public IActionResult Logout()
         {
-            HttpContext.Session.Clear(); // limpa a sessão
+            // Limpa toda a sessão
+            _httpContextAccessor.HttpContext.Session.Clear();
             return RedirectToAction("Login", "Account");
         }
 
@@ -37,7 +44,6 @@ namespace ControleFinanceiro.Controllers
             }
 
             var usuario = _context.Usuarios.FirstOrDefault(u => u.Email == email);
-
             if (usuario != null)
             {
                 var passwordHasher = new PasswordHasher<Usuario>();
@@ -46,7 +52,7 @@ namespace ControleFinanceiro.Controllers
                 if (result == PasswordVerificationResult.Success)
                 {
                     // 👉 Salva o usuário logado na sessão
-                    HttpContext.Session.SetInt32("UsuarioId", usuario.Id);
+                    _httpContextAccessor.HttpContext.Session.SetInt32("UsuarioId", usuario.Id);
 
                     // Redireciona para o dashboard
                     return RedirectToAction("Index", "Dashboard");

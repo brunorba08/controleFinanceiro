@@ -1,39 +1,38 @@
 ﻿using ControleFinanceiro.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;
 
 namespace ControleFinanceiro.Controllers
 {
-    public class TransacaoController : Controller
+    public class TransacaoController : BaseController
     {
         private readonly AppDbContext _context;
 
-        public TransacaoController(AppDbContext context)
+        public TransacaoController(AppDbContext context, IHttpContextAccessor accessor)
+            : base(accessor)
         {
             _context = context;
         }
 
-        // Listar transações com filtro
         public IActionResult Index(DateTime? dataInicial, DateTime? dataFinal, string filtroPeriodo)
         {
-            int? usuarioId = HttpContext.Session.GetInt32("UsuarioId");
+            int? usuarioId = HttpContextAtivo.Session.GetInt32("UsuarioId");
             if (usuarioId == null)
                 return RedirectToAction("Login", "Account");
+
+            ViewBag.UsuarioLogado = HttpContextAtivo.Session.GetString("UsuarioLogado");
 
             var transacoes = _context.Transacoes
                                      .Where(t => t.UsuarioId == usuarioId)
                                      .AsQueryable();
 
-            // Filtra por datas
             if (dataInicial.HasValue)
                 transacoes = transacoes.Where(t => t.Data >= dataInicial.Value);
 
             if (dataFinal.HasValue)
                 transacoes = transacoes.Where(t => t.Data <= dataFinal.Value.AddDays(1).AddTicks(-1));
 
-            // Filtra por período específico
             if (!string.IsNullOrEmpty(filtroPeriodo))
             {
                 var hoje = DateTime.Today;
@@ -51,24 +50,23 @@ namespace ControleFinanceiro.Controllers
             return View(lista);
         }
 
-        // Formulário para adicionar
         [HttpGet]
         public IActionResult Adicionar()
         {
-            int? usuarioId = HttpContext.Session.GetInt32("UsuarioId");
+            int? usuarioId = HttpContextAtivo.Session.GetInt32("UsuarioId");
             if (usuarioId == null)
                 return RedirectToAction("Login", "Account");
 
+            ViewBag.UsuarioLogado = HttpContextAtivo.Session.GetString("UsuarioLogado");
             ViewBag.UsuarioId = usuarioId;
             return View();
         }
 
-        // Salvar transação
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Adicionar(Transacao transacao)
         {
-            int? usuarioId = HttpContext.Session.GetInt32("UsuarioId");
+            int? usuarioId = HttpContextAtivo.Session.GetInt32("UsuarioId");
             if (usuarioId == null)
                 return RedirectToAction("Login", "Account");
 
@@ -89,13 +87,14 @@ namespace ControleFinanceiro.Controllers
             return RedirectToAction("Index");
         }
 
-        // GET: Transacao/Editar/5
         [HttpGet]
         public IActionResult Editar(int id)
         {
-            int? usuarioId = HttpContext.Session.GetInt32("UsuarioId");
+            int? usuarioId = HttpContextAtivo.Session.GetInt32("UsuarioId");
             if (usuarioId == null)
                 return RedirectToAction("Login", "Account");
+
+            ViewBag.UsuarioLogado = HttpContextAtivo.Session.GetString("UsuarioLogado");
 
             var transacao = _context.Transacoes.FirstOrDefault(t => t.Id == id && t.UsuarioId == usuarioId);
             if (transacao == null)
@@ -104,12 +103,11 @@ namespace ControleFinanceiro.Controllers
             return View(transacao);
         }
 
-        // POST: Transacao/Editar
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Editar(Transacao model)
         {
-            int? usuarioId = HttpContext.Session.GetInt32("UsuarioId");
+            int? usuarioId = HttpContextAtivo.Session.GetInt32("UsuarioId");
             if (usuarioId == null)
                 return RedirectToAction("Login", "Account");
 
@@ -123,7 +121,7 @@ namespace ControleFinanceiro.Controllers
                 transacao.Valor = model.Valor;
                 transacao.Tipo = model.Tipo;
                 transacao.Data = model.Data;
-                transacao.FormaPagamento = model.FormaPagamento; // ✅ mantém campo atualizado
+                transacao.FormaPagamento = model.FormaPagamento;
 
                 _context.SaveChanges();
 
@@ -135,12 +133,11 @@ namespace ControleFinanceiro.Controllers
             return View(model);
         }
 
-        // POST: Transacao/Excluir
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Excluir(int id)
         {
-            int? usuarioId = HttpContext.Session.GetInt32("UsuarioId");
+            int? usuarioId = HttpContextAtivo.Session.GetInt32("UsuarioId");
             if (usuarioId == null)
                 return RedirectToAction("Login", "Account");
 

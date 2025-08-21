@@ -1,11 +1,177 @@
-﻿@{
+﻿@model ControleFinanceiro.Models.DashboardViewModel
+
+@{
     ViewData["Title"] = "Dashboard";
 }
 
-<h2>Bem-vindo, @ViewBag.UsuarioLogado!</h2>
+<div class="container mt-4">
+    <!-- Título e botão -->
+    <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-light rounded shadow-sm">
+        <div>
+            <h2 class="mb-1">Bem-vindo, <span class="text-primary">@ViewBag.UsuarioLogado</span>!</h2>
+            <p class="text-muted mb-0">Cuide das suas finanças de forma rápida e prática.</p>
+        </div>
+    </div>
+    <div>
+        <a href="@Url.Action("Adicionar", "Transacao")" class="btn btn-success btn-lg shadow-sm">
+            <i class="bi bi-plus-circle"></i> Adicionar Nova Transação
+        </a>
+    </div>
+    <br />
+    <!-- Filtros -->
+    <form method="get" asp-action="Index" asp-controller="Dashboard" class="mb-4">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label>Tipo de Filtro</label>
+                <select id="tipoFiltro" name="tipoFiltro" class="form-control">
+                    <option value="dia" selected>Dia</option>
+                    <option value="mes">Mês</option>
+                    <option value="ano">Ano</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label>Data</label>
+                <input type="date" id="dataFiltro" name="dataFiltro" class="form-control" />
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary btn-block">Filtrar</button>
+            </div>
+        </div>
+    </form>
 
-<p>Este é o seu painel de controle.</p>
+    <hr />
 
-<a class="btn btn-primary" href="@Url.Action("Index", "Transacao")">
-    Ver Minhas Transações
-</a>
+    <!-- Cards Resumo -->
+    <div class="row text-center mb-4">
+        <div class="col-md-4">
+            <div class="card bg-danger text-white shadow-sm">
+                <div class="card-body">
+                    <h5>Despesas</h5>
+                    <h3>@Model.TotalDespesas.ToString("C")</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success text-white shadow-sm">
+                <div class="card-body">
+                    <h5>Ganhos</h5>
+                    <h3>@Model.TotalGanhos.ToString("C")</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-info text-white shadow-sm">
+                <div class="card-body">
+                    <h5>Saldo</h5>
+                    <h3>@Model.Saldo.ToString("C")</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráficos -->
+    <div class="row mb-4">
+        <div class="col-md-6 mb-3">
+            <canvas id="graficoBarras"></canvas>
+        </div>
+        <div class="col-md-6 mb-3">
+            <canvas id="graficoPizza"></canvas>
+        </div>
+    </div>
+
+    <hr />
+
+    <!-- Histórico -->
+    <h4 class="mb-3">Histórico de Transações</h4>
+    <div class="table-responsive shadow-sm rounded">
+        <table class="table table-striped table-hover mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th>Data</th>
+                    <th>Descrição</th>
+                    <th>Tipo</th>
+                    <th>Valor</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Transacoes)
+                {
+                    <tr>
+                        <td>@item.Data.ToString("dd/MM/yyyy")</td>
+                        <td>@item.Descricao</td>
+                        <td>@item.Tipo</td>
+                        <td>@item.Valor.ToString("C")</td>
+                        <td>
+                            @if (item.Data.Date == DateTime.Now.Date)
+                            {
+                                <a href="@Url.Action("Editar", "Transacao", new { id = item.Id })" class="btn btn-warning btn-sm">Editar</a>
+                                <a href="@Url.Action("Excluir", "Transacao", new { id = item.Id })" class="btn btn-danger btn-sm">Excluir</a>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Somente visualização</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<br /><br />
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Gráfico de Barras
+        var ctx1 = document.getElementById('graficoBarras').getContext('2d');
+        var graficoBarras = new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.LabelsGrafico)),
+                datasets: [{
+                    label: 'Despesas',
+                    data: @Html.Raw(Json.Serialize(Model.DadosDespesas)),
+                    backgroundColor: 'rgba(220, 53, 69, 0.7)'
+                }, {
+                    label: 'Ganhos',
+                    data: @Html.Raw(Json.Serialize(Model.DadosGanhos)),
+                    backgroundColor: 'rgba(40, 167, 69, 0.7)'
+                }]
+            }
+        });
+
+        // Gráfico de Pizza
+        var ctx2 = document.getElementById('graficoPizza').getContext('2d');
+        var graficoPizza = new Chart(ctx2, {
+            type: 'pie',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.LabelsCategorias)),
+                datasets: [{
+                    data: @Html.Raw(Json.Serialize(Model.DadosCategorias)),
+                    backgroundColor: ['#007bff', '#28a745', '#ffc107', '#dc3545']
+                }]
+            }
+        });
+
+        // Filtro de tipo de data
+        const tipoFiltro = document.getElementById('tipoFiltro');
+        const dataFiltro = document.getElementById('dataFiltro');
+
+        tipoFiltro.addEventListener('change', function () {
+            if (this.value === 'dia') {
+                dataFiltro.type = 'date';
+                dataFiltro.value = '';
+            } else if (this.value === 'mes') {
+                dataFiltro.type = 'month';
+                dataFiltro.value = '';
+            } else if (this.value === 'ano') {
+                dataFiltro.type = 'number';
+                dataFiltro.placeholder = 'Ano (ex: 2025)';
+                dataFiltro.value = '';
+            }
+        });
+    </script>
+}
