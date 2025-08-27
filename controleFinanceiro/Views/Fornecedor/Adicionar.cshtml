@@ -1,15 +1,40 @@
 ﻿@model ControleFinanceiro.Models.Fornecedor
 
-<h2>Adicionar Fornecedor</h2>
+<style>
 
-<form method="post">
-    <div class="mb-3">
-        <label>Nome</label>
-        <input type="text" name="Nome" class="form-control" required />
-    </div>
-    <div class="mb-3">
-        <label>Contato</label>
-        <input type="text" name="NumeroContato" class="form-control" />
-    </div>
-    <button type="submit" class="btn btn-success">Salvar</button>
-</form>
+    .form-box {
+        max-width: 500px;
+        margin: 50px auto;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        background-color: #fff;
+    }
+
+    .form-box h2 {
+        color: #007bff; 
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .btn-voltar {
+        margin-bottom: 20px;
+    }
+</style>
+
+<a href="javascript:history.back()" class="btn btn-secondary btn-voltar">← Voltar</a>
+
+<div class="form-box">
+    <h2>Adicionar Fornecedor</h2>
+    <form method="post">
+        <div class="mb-3">
+            <label>Nome</label>
+            <input type="text" name="Nome" class="form-control" required />
+        </div>
+        <div class="mb-3">
+            <label>Contato</label>
+            <input type="text" name="NumeroContato" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-success w-100">Salvar</button>
+    </form>
+</div>

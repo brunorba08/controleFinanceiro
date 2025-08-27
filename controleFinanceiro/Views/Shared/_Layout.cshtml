@@ -36,13 +36,12 @@
 
         /* Navbar */
         .navbar {
-            height: 60px; /* Header fixo */
+            height: 60px;
             overflow: visible;
             align-items: center;
             padding: 0 1rem;
         }
 
-        /* Logo maior sem aumentar header */
         .navbar-brand {
             display: flex;
             align-items: center;
@@ -52,10 +51,9 @@
 
             .navbar-brand img {
                 height: 125px;
-                max-height: 150px;
+                max-height: 90px;
             }
 
-        /* Botões Login / Cadastro */
         .login-navbar-button {
             background-color: transparent;
             color: #3654ff;
@@ -88,7 +86,6 @@
                 transform: translateX(4px);
             }
 
-        /* Botão hamburguer */
         .hamburguer-button {
             background-color: #f1f1f1;
             border: 1px solid #ccc;
@@ -103,7 +100,6 @@
                 background-color: #e2e2e2;
             }
 
-        /* Alinha todos itens verticalmente */
         .navbar .d-flex.align-items-center {
             align-items: center;
         }
@@ -126,7 +122,7 @@
             }
 
             .offcanvas .btn-close {
-                filter: invert(1); /* para fechar ficar visível no fundo azul */
+                filter: invert(1);
             }
 
         .offcanvas-body {
@@ -163,12 +159,29 @@
                             font-size: 1.2rem;
                         }
 
-                        /* Ícones opcionais para links */
                         .offcanvas-body ul li a.dashboard i {
                             content: "\f0e4";
                         }
-        /* apenas exemplo */
 
+        @@media (max-width: 768px) {
+            footer .container
+
+        {
+            flex-direction: column !important;
+            align-items: flex-start; 
+            gap: 10px; 
+        }
+
+        footer .container a {
+            display: block; 
+            margin-bottom: 5px;
+        }
+
+        footer .container div {
+            margin-bottom: 10px;
+        }
+
+        }
     </style>
 </head>
 <body>
@@ -176,10 +189,15 @@
         <header>
             <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom mb-3">
                 <div class="container-fluid">
-                    <!-- Logo -->
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    @{
+                        var usuarioLogado = Context.Session.GetInt32("UsuarioId") != null;
+                        var controllerLink = usuarioLogado ? "Dashboard" : "Home";
+                    }
+
+                    <a class="navbar-brand" asp-area="" asp-controller="@controllerLink" asp-action="Index">
                         <img src="~/imagens/controleFinanceiro.png" alt="Controle Financeiro">
                     </a>
+
 
                     <!-- Botões à direita -->
                     <div class="d-flex ms-auto align-items-center">

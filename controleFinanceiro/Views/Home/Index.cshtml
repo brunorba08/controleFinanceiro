@@ -180,6 +180,118 @@
         color: #555;
     }
 
+    @@media (max-width: 768px) {
+        /* Seções principais */
+        .section
+
+    {
+        flex-direction: column !important; /* imagens e textos em coluna */
+        text-align: center; /* centraliza textos */
+        padding: 30px 15px;
+    }
+
+    .section img {
+        margin: 15px 0; /* espaçamento entre imagem e texto */
+        width: 90%; /* ocupa quase toda a largura */
+        max-width: 300px;
+    }
+
+    .section-text {
+        max-width: 100%;
+        font-size: 1em;
+        padding: 0 10px;
+    }
+
+    h2 {
+        font-size: 1.4em;
+    }
+
+    p {
+        font-size: 1em;
+        line-height: 1.5;
+    }
+
+    /* Cards */
+    .cards-container {
+        flex-direction: column; /* cada card em linha */
+        gap: 20px;
+    }
+
+    .card {
+        flex: 1 1 100%; /* ocupa toda a largura */
+        text-align: center;
+        padding: 15px;
+    }
+
+        .card h3 {
+            font-size: 1.2em;
+        }
+
+        .card p {
+            font-size: 0.95em;
+        }
+
+    /* Hero */
+    .hero {
+        padding: 40px 15px;
+    }
+
+        .hero h1.title-animated {
+            font-size: 1.8em;
+        }
+
+        .hero p {
+            font-size: 1em;
+        }
+
+        .hero a {
+            font-size: 16px;
+            padding: 10px 20px;
+        }
+
+    }
+
+    .title-animated {
+        --border-right: 6px;
+        --text-stroke-color: rgba(255, 255, 255, 0.6);
+        --animation-color: #37a0ff;
+        --fs-size: 2.5em;
+        letter-spacing: 3px;
+        font-size: var(--fs-size);
+        font-family: "Arial", sans-serif;
+        position: relative;
+        text-transform: uppercase;
+        display: inline-block;
+        line-height: 1.2;
+        white-space: normal; /* permite quebra de linha */
+        word-wrap: break-word; /* força quebra se necessário */
+    }
+
+        .title-animated .title-stroke,
+        .title-animated .title-fill {
+            white-space: normal; /* permite quebra de linha */
+        }
+
+    /* Ajustes para mobile */
+    @@media (max-width: 768px) {
+        .title-animated
+
+    {
+        font-size: 1.8em; /* reduz tamanho da fonte */
+        letter-spacing: 1px;
+    }
+
+    .hero p {
+        font-size: 1em;
+    }
+
+    .hero a {
+        font-size: 16px;
+        padding: 10px 20px;
+    }
+
+    }
+
 </style>
 
 <div class="hero">

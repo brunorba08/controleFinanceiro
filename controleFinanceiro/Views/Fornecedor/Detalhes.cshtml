@@ -1,27 +1,154 @@
 ﻿@model ControleFinanceiro.Models.Fornecedor
 
-<h2>@Model.Nome</h2>
-<p>Contato: @Model.NumeroContato</p>
+<!-- Link do FontAwesome (ícones) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
 
-<a href="@Url.Action("AdicionarCompra", "Fornecedor", new { fornecedorId = Model.FornecedorId })" class="btn btn-success mb-3">Adicionar Compra</a>
+<style>
+    .container-box {
+        max-width: 950px;
+        margin: 60px auto;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        background-color: #fff;
+    }
 
-<h4>Compras</h4>
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Data</th>
-            <th>Descrição</th>
-            <th>Valor</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach(var c in Model.Compras)
-        {
+    h2 {
+        color: #0d6efd;
+        text-align: center;
+        margin-bottom: 15px;
+        font-weight: 600;
+        font-size: 28px;
+    }
+
+    p {
+        text-align: center;
+        font-size: 16px;
+        color: #495057;
+        margin-bottom: 20px;
+    }
+
+    /* Botão Adicionar Compra centralizado e menor */
+    .btn-adicionar-compra {
+        display: block;
+        margin: 0 auto 25px auto; /* centraliza horizontalmente */
+        font-size: 0.85rem;
+        padding: 6px 12px;
+        max-width: 180px;
+        text-align: center;
+        gap: 6px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-top: 20px;
+    }
+
+    thead th {
+        background-color: #f8f9fa;
+        color: #000;
+        text-align: left;
+        padding: 12px;
+        font-size: 15px;
+        font-weight: 600;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    tbody td {
+        padding: 12px;
+        border-bottom: 1px solid #dee2e6;
+        font-size: 14px;
+        color: #495057;
+    }
+
+    tbody tr:hover {
+        background-color: #e7f1ff;
+    }
+
+    .no-data {
+        text-align: center;
+        padding: 20px;
+        color: #6c757d;
+        font-style: italic;
+    }
+</style>
+<a href="javascript:history.back()" class="btn btn-secondary btn-voltar">← Voltar</a>
+
+<div class="container-box">
+    <h2>@Model.Nome</h2>
+    <p>Contato: @Model.NumeroContato</p>
+
+    <a href="@Url.Action("AdicionarCompra", "Fornecedor", new { fornecedorId = Model.FornecedorId })" class="btn btn-success btn-adicionar-compra">
+        <i class="fa-solid fa-plus"></i> Adicionar Compra
+    </a>
+
+    <form method="get" action="@Url.Action("Detalhes", "Fornecedor")" class="d-flex mb-3" style="gap:10px;">
+        <input type="hidden" name="id" value="@Model.FornecedorId" />
+        <input type="date" name="filtroData" class="form-control" style="max-width: 200px;" value="@Context.Request.Query["filtroData"]" />
+        <button type="submit" class="btn btn-primary">Filtrar</button>
+        <a href="@Url.Action("Detalhes", "Fornecedor", new { id = Model.FornecedorId })" class="btn btn-secondary">Limpar</a>
+    </form>
+    <h4>Compras</h4>
+
+    <table class="table">
+        <thead>
             <tr>
-                <td>@c.Data.ToString("dd/MM/yyyy")</td>
-                <td>@c.Descricao</td>
-                <td>@c.Valor.ToString("C")</td>
+                <th>Data</th>
+                <th>Descrição</th>
+                <th>Valor</th>
+                <th>Imagem</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var compra in Model.Compras)
+            {
+                <tr>
+                    <td>@compra.Data.ToString("dd/MM/yyyy")</td>
+                    <td>@compra.Descricao</td>
+                    <td>@compra.Valor.ToString("C")</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(compra.FotoCaminho))
+                        {
+                            <button class="btn btn-sm btn-primary" onclick="abrirModal('@Url.Content("~/uploads/" + compra.FotoCaminho)')">
+                                <i class="fa fa-image"></i>
+                            </button>
+                        }
+                        else
+                        {
+                            <span>-</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div class="modal fade" id="imagemModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Visualizar Imagem</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="imagemCompra" src="" alt="Imagem da Compra" class="img-fluid" />
+            </div>
+            <div class="modal-footer">
+                <a id="downloadLink" class="btn btn-success" download>Baixar Imagem</a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function abrirModal(url) {
+        document.getElementById('imagemCompra').src = url;
+        document.getElementById('downloadLink').href = url;
+        var modal = new bootstrap.Modal(document.getElementById('imagemModal'));
+        modal.show();
+    }
+</script>

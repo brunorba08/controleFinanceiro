@@ -1,27 +1,121 @@
 ﻿@model IEnumerable<ControleFinanceiro.Models.Fornecedor>
 
-<h2>Fornecedores</h2>
+<!-- Link do FontAwesome (ícones) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
 
-<a href="@Url.Action("Adicionar", "Fornecedor")" class="btn btn-success mb-3">Adicionar Fornecedor</a>
+<style>
+    .container-box {
+        max-width: 950px;
+        margin: 60px auto;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        background-color: #fff;
+    }
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Nome</th>
-            <th>Contato</th>
-            <th>Ações</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var f in Model)
-        {
+    h2 {
+        color: #0d6efd;
+        text-align: center;
+        margin-bottom: 30px;
+        font-weight: 600;
+        font-size: 28px;
+    }
+
+    /* Botão Adicionar Fornecedor centralizado e menor */
+    .btn-adicionar {
+        display: block;
+        margin: 0 auto 25px auto; /* centraliza horizontalmente */
+        font-size: 0.85rem;
+        padding: 6px 12px;
+        max-width: 180px;
+        text-align: center;
+        gap: 6px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    thead th {
+        background-color: #f8f9fa;
+        color: #000;
+        text-align: left;
+        padding: 12px;
+        font-size: 15px;
+        font-weight: 600;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    tbody td {
+        padding: 12px;
+        border-bottom: 1px solid #dee2e6;
+        font-size: 14px;
+        color: #495057;
+    }
+
+    tbody tr:hover {
+        background-color: #e7f1ff;
+    }
+
+    /* Botão Ver / Adicionar menor */
+    .btn-ver {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.75rem; /* menor que antes */
+        padding: 2px 6px; /* menos padding lateral */
+        min-width: 100px; /* largura mínima menor */
+    }
+
+    .no-data {
+        text-align: center;
+        padding: 20px;
+        color: #6c757d;
+        font-style: italic;
+    }
+</style>
+
+<div class="container-box">
+    <h2>Fornecedores</h2>
+
+    <a href="@Url.Action("Adicionar", "Fornecedor")" class="btn btn-success btn-adicionar">
+        <i class="fa-solid fa-plus"></i> Adicionar Fornecedor
+    </a>
+
+    <table class="table">
+        <thead>
             <tr>
-                <td>@f.Nome</td>
-                <td>@f.NumeroContato</td>
-                <td>
-                    <a href="@Url.Action("Detalhes", "Fornecedor", new { id = f.FornecedorId })" class="btn btn-primary btn-sm">Ver / Adicionar Compra</a>
-                </td>
+                <th>Nome</th>
+                <th>Contato</th>
+                <th>Ações</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="3" class="no-data">Nenhum fornecedor cadastrado.</td>
+                </tr>
+            }
+            else
+            {
+                foreach (var f in Model)
+                {
+                    <tr>
+                        <td>@f.Nome</td>
+                        <td>@f.NumeroContato</td>
+                        <td>
+                            <a href="@Url.Action("Detalhes", "Fornecedor", new { id = f.FornecedorId })" class="btn btn-primary btn-ver">
+                                <i class="fa-solid fa-eye"></i> Ver / Adicionar
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

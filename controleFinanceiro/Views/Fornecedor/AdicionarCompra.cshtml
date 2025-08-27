@@ -1,29 +1,93 @@
 ﻿@model ControleFinanceiro.Models.CompraFornecedor
 
-<h2>Adicionar Compra</h2>
+<!-- Link do FontAwesome (ícones) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
 
-<form method="post" enctype="multipart/form-data">
-    <input type="hidden" name="FornecedorId" value="@Model.FornecedorId" />
+<style>
+    .container-box {
+        max-width: 600px;
+        margin: 60px auto;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        background-color: #fff;
+    }
 
-    <div class="mb-3">
-        <label>Descrição</label>
-        <input type="text" name="Descricao" class="form-control" required />
-    </div>
+    h2 {
+        color: #0d6efd;
+        text-align: center;
+        margin-bottom: 25px;
+        font-weight: 600;
+        font-size: 26px;
+    }
 
-    <div class="mb-3">
-        <label>Valor</label>
-        <input type="number" step="0.01" name="Valor" class="form-control" required />
-    </div>
+    form .mb-3 {
+        margin-bottom: 18px;
+    }
 
-    <div class="mb-3">
-        <label>Data</label>
-        <input type="date" name="DataCompra" class="form-control" value="@Model.Data.ToString("yyyy-MM-dd")" required />
-    </div>
+    form label {
+        font-weight: 500;
+        margin-bottom: 6px;
+        display: block;
+    }
 
-    <div class="mb-3">
-        <label>Foto (opcional)</label>
-        <input type="file" name="Foto" class="form-control" />
-    </div>
+    form input[type="text"],
+    form input[type="number"],
+    form input[type="date"],
+    form input[type="file"] {
+        width: 100%;
+        padding: 8px 12px;
+        border-radius: 6px;
+        border: 1px solid #ced4da;
+        font-size: 14px;
+    }
 
-    <button type="submit" class="btn btn-success">Salvar</button>
-</form>
+    form input[type="file"] {
+        padding: 4px 8px;
+    }
+
+    button.btn-success {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        font-size: 0.9rem;
+        padding: 6px 16px;
+        margin-top: 10px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
+<a href="javascript:history.back()" class="btn btn-secondary btn-voltar">← Voltar</a>
+
+<div class="container-box">
+    <h2>Adicionar Compra</h2>
+
+    <form method="post" enctype="multipart/form-data" asp-action="AdicionarCompraComFoto">
+        <input type="hidden" name="FornecedorId" value="@Model.FornecedorId" />
+
+        <div class="mb-3">
+            <label>Descrição</label>
+            <input type="text" name="Descricao" class="form-control" placeholder="Ex: Compra de produtos" required />
+        </div>
+
+        <div class="mb-3">
+            <label>Valor</label>
+            <input type="number" step="0.01" name="Valor" class="form-control" placeholder="Ex: 250.00" required />
+        </div>
+
+        <div class="mb-3">
+            <label>Data</label>
+            <input type="date" name="Data" class="form-control" value="@Model.Data.ToString("yyyy-MM-dd")" required />
+        </div>
+
+        <div class="mb-3">
+            <label>Foto (opcional)</label>
+            <input type="file" name="Foto" class="form-control" accept="image/*" capture="camera" />
+        </div>
+
+        <button type="submit" class="btn btn-success">
+            <i class="fa-solid fa-floppy-disk"></i> Salvar
+        </button>
+    </form>
+</div>
