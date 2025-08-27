@@ -1,0 +1,27 @@
+﻿@model ControleFinanceiro.Models.Fornecedor
+
+<h2>@Model.Nome</h2>
+<p>Contato: @Model.NumeroContato</p>
+
+<a href="@Url.Action("AdicionarCompra", "Fornecedor", new { fornecedorId = Model.FornecedorId })" class="btn btn-success mb-3">Adicionar Compra</a>
+
+<h4>Compras</h4>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Data</th>
+            <th>Descrição</th>
+            <th>Valor</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var c in Model.Compras)
+        {
+            <tr>
+                <td>@c.Data.ToString("dd/MM/yyyy")</td>
+                <td>@c.Descricao</td>
+                <td>@c.Valor.ToString("C")</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,28 +1,41 @@
 ﻿@model ControleFinanceiro.Models.Transacao
 
-<h2>Editar Transação</h2>
+<div class="d-flex flex-column justify-content-center align-items-center" style="height: 100vh;">
+    <!-- Título fora da box -->
+    <h2 class="mb-4" style="color: #0d6efd;">Editar Transação</h2>
 
-<form method="post">
-    <div class="mb-3">
-        <label>Descrição</label>
-        <input type="text" name="Descricao" class="form-control" value="@Model.Descricao" required />
+    <!-- Box central com informações -->
+    <div class="card shadow-lg p-4" style="width: 400px; border-radius: 10px;">
+        <form method="post">
+            <div class="mb-3">
+                <label class="form-label">Descrição</label>
+                <input type="text" name="Descricao" class="form-control" value="@Model.Descricao" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Valor</label>
+                <input type="number" name="Valor" class="form-control" value="@Model.Valor" step="0.01" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Tipo</label>
+                @Html.DropDownListFor(model => model.Tipo,
+                new List<SelectListItem> {
+                                new SelectListItem { Text = "Ganho", Value = "Ganho", Selected = Model.Tipo == "Ganho" },
+                                new SelectListItem { Text = "Despesa", Value = "Despesa", Selected = Model.Tipo == "Despesa" }
+                                },
+                                new { @class = "form-control" })
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Data</label>
+                <input type="date" name="Data" class="form-control" value="@Model.Data.ToString("yyyy-MM-dd")" required />
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-secondary" onclick="history.back()">Voltar</button>
+                <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+            </div>
+        </form>
     </div>
-    <div class="mb-3">
-        <label>Valor</label>
-        <input type="number" name="Valor" class="form-control" value="@Model.Valor" step="0.01" required />
-    </div>
-    <div class="form-group">
-        <label>Tipo:</label>
-        @Html.DropDownListFor(model => model.Tipo,
-        new List<SelectListItem> {
-                new SelectListItem { Text = "Ganho", Value = "Ganho", Selected = Model.Tipo == "Ganho" },
-                new SelectListItem { Text = "Despesa", Value = "Despesa", Selected = Model.Tipo == "Despesa" }
-                },
-                new { @class = "form-control" })
-    </div>
-    <div class="mb-3">
-        <label>Data</label>
-        <input type="date" name="Data" class="form-control" value="@Model.Data.ToString("yyyy-MM-dd")" required />
-    </div>
-    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
-</form>
+</div>

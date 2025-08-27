@@ -107,6 +107,68 @@
         .navbar .d-flex.align-items-center {
             align-items: center;
         }
+
+        .offcanvas {
+            width: 250px;
+            background-color: #3654ff;
+            color: #fff;
+            border-right: none;
+            box-shadow: 2px 0 12px rgba(0,0,0,0.2);
+        }
+
+            .offcanvas .offcanvas-header {
+                border-bottom: 1px solid rgba(255,255,255,0.2);
+            }
+
+            .offcanvas .offcanvas-title {
+                color: #fff;
+                font-weight: 600;
+            }
+
+            .offcanvas .btn-close {
+                filter: invert(1); /* para fechar ficar visível no fundo azul */
+            }
+
+        .offcanvas-body {
+            padding: 1rem 0.5rem;
+        }
+
+            .offcanvas-body ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+                .offcanvas-body ul li {
+                    margin-bottom: 1rem;
+                }
+
+                    .offcanvas-body ul li a {
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                        color: #fff;
+                        text-decoration: none;
+                        padding: 0.5rem 1rem;
+                        border-radius: 6px;
+                        transition: background-color 0.3s, transform 0.2s;
+                    }
+
+                        .offcanvas-body ul li a:hover {
+                            background-color: rgba(255,255,255,0.15);
+                            transform: translateX(5px);
+                        }
+
+                        .offcanvas-body ul li a i {
+                            font-size: 1.2rem;
+                        }
+
+                        /* Ícones opcionais para links */
+                        .offcanvas-body ul li a.dashboard i {
+                            content: "\f0e4";
+                        }
+        /* apenas exemplo */
+
     </style>
 </head>
 <body>
@@ -173,6 +235,7 @@
                             <li><a href="/Dashboard/Index" class="text-decoration-none">Dashboard</a></li>
                             <li><a href="/Transacao/Index" class="text-decoration-none">Minhas Transações</a></li>
                             <li><a href="/Transacao/Adicionar" class="text-decoration-none">Adicionar Transação</a></li>
+                            <li><a href="/Fornecedor/Index" class="text-decoration-none">Fornecedores</a></li>
                         </ul>
                     </div>
                 </div>

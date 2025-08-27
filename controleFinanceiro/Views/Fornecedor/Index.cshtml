@@ -1,0 +1,27 @@
+﻿@model IEnumerable<ControleFinanceiro.Models.Fornecedor>
+
+<h2>Fornecedores</h2>
+
+<a href="@Url.Action("Adicionar", "Fornecedor")" class="btn btn-success mb-3">Adicionar Fornecedor</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Contato</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var f in Model)
+        {
+            <tr>
+                <td>@f.Nome</td>
+                <td>@f.NumeroContato</td>
+                <td>
+                    <a href="@Url.Action("Detalhes", "Fornecedor", new { id = f.FornecedorId })" class="btn btn-primary btn-sm">Ver / Adicionar Compra</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

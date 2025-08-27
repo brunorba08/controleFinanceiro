@@ -10,5 +10,8 @@ namespace ControleFinanceiro.Models
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Transacao> Transacoes { get; set; }
 
+        public DbSet<Fornecedor> Fornecedores { get; set; }
+        public DbSet<CompraFornecedor> ComprasFornecedor { get; set; }
+
     }
 }

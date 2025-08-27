@@ -35,7 +35,7 @@ namespace ControleFinanceiro.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(string email, string senha)
+        public async Task<IActionResult> Login(string email, string senha)
         {
             if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(senha))
             {
@@ -43,7 +43,7 @@ namespace ControleFinanceiro.Controllers
                 return View();
             }
 
-            var usuario = _context.Usuarios.FirstOrDefault(u => u.Email == email);
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == email);
             if (usuario != null)
             {
                 var passwordHasher = new PasswordHasher<Usuario>();
@@ -51,10 +51,7 @@ namespace ControleFinanceiro.Controllers
 
                 if (result == PasswordVerificationResult.Success)
                 {
-                    // 👉 Salva o usuário logado na sessão
                     _httpContextAccessor.HttpContext.Session.SetInt32("UsuarioId", usuario.Id);
-
-                    // Redireciona para o dashboard
                     return RedirectToAction("Index", "Dashboard");
                 }
             }
@@ -88,5 +85,7 @@ namespace ControleFinanceiro.Controllers
 
             return View(usuario);
         }
+
+
     }
 }

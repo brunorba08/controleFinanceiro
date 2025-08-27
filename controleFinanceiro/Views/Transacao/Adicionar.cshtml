@@ -1,45 +1,161 @@
 ﻿@{
     ViewData["Title"] = "Adicionar Transação";
     var tipoSelecionado = ViewBag.Tipo ?? "Despesa";
+    var dataSelecionada = ViewBag.Data != null ? ((DateTime)ViewBag.Data).ToString("yyyy-MM-dd") : DateTime.Now.ToString("yyyy-MM-dd");
 }
 
-<h2>Adicionar Transação</h2>
+<style>
+    .form-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 90vh;
+        padding: 10px;
+    }
 
-<form asp-action="Adicionar" method="post">
-    <div class="mb-3">
-        <label>Descrição</label>
-        <input type="text" class="form-control" name="Descricao" value="@ViewBag.Descricao" required />
+    h2 {
+        color: #3654ff;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    form {
+        width: 100%;
+        max-width: 900px;
+        min-width: 500px; 
+        background-color: #f8f9fa;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        text-align: center;
+    }
+
+    @@media (max-width: 768px) {
+        form
+
+    {
+        padding: 20px; 
+        min-width: auto;
+        width: 100%;
+    }
+
+    }
+
+    .form-label {
+        font-weight: 500;
+    }
+
+    .btn-primary {
+        padding: 0.5rem 1.5rem;
+        font-weight: 600;
+        background-color: #3654ff;
+        border-color: #3654ff;
+        display: block;
+        margin: 0 auto;
+    }
+
+        .btn-primary:hover {
+            background-color: #2b44cc;
+            border-color: #2b44cc;
+        }
+
+    small.text-muted {
+        display: block;
+        margin-top: 0.2rem;
+        font-size: 0.85rem;
+    }
+</style>
+
+
+<div class="form-container">
+    <div>
+        <h2>Adicionar Transação</h2>
+
+        <form asp-action="Adicionar" method="post">
+            <div class="mb-3">
+                <label class="form-label">Descrição</label>
+                <input type="text" class="form-control" name="Descricao" value="@ViewBag.Descricao" placeholder="Digite a descrição" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Valor</label>
+                <input type="text" class="form-control" name="Valor" id="valor" value="@ViewBag.Valor" placeholder="0,00" required>
+                <small class="text-muted">Digite o valor (ex: 2,50)</small>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Tipo</label><br />
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="Tipo" id="ganho" value="Ganho"
+                           @(tipoSelecionado == "Ganho" ? "checked" : "") onchange="toggleFormaPagamento(this.value)">
+                    <label class="form-check-label" for="ganho">Ganho (+)</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="Tipo" id="despesa" value="Despesa"
+                           @(tipoSelecionado == "Despesa" ? "checked" : "") onchange="toggleFormaPagamento(this.value)">
+                    <label class="form-check-label" for="despesa">Despesa (-)</label>
+                </div>
+            </div>
+
+            <div class="mb-3" id="formaPagamentoDiv" style="display:@(tipoSelecionado == "Despesa" ? "block" : "none")">
+                <label class="form-label">Forma de Pagamento</label>
+                <select class="form-control" name="FormaPagamento">
+                    <option value="">Selecione</option>
+                    <option value="Dinheiro">Dinheiro</option>
+                    <option value="Cartão">Cartão</option>
+                    <option value="PIX">PIX</option>
+                    <option value="Boleto">Boleto</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Data</label>
+                <input type="date" class="form-control" name="Data" value="@dataSelecionada" />
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-2">Salvar</button>
+        </form>
     </div>
+</div>
+<br />
+<script>
+    function toggleFormaPagamento(tipo) {
+        const div = document.getElementById('formaPagamentoDiv');
+        div.style.display = tipo === 'Despesa' ? 'block' : 'none';
+    }
 
-    <div class="mb-3">
-        <label>Valor</label>
-        <input type="number" class="form-control" name="Valor" value="@ViewBag.Valor" step="0.01" required />
-    </div>
+    function mascaraMoeda(valorInput) {
+        let valor = valorInput.value;
 
-    <div class="mb-3">
-        <label>Tipo</label><br />
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="Tipo" id="ganho" value="Ganho"
-                   @(tipoSelecionado == "Ganho" ? "checked" : "") onchange="toggleFormaPagamento(this.value)">
-            <label class="form-check-label" for="ganho">Ganho (+)</label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="Tipo" id="despesa" value="Despesa"
-                   @(tipoSelecionado == "Despesa" ? "checked" : "") onchange="toggleFormaPagamento(this.value)">
-            <label class="form-check-label" for="despesa">Despesa (-)</label>
-        </div>
-    </div>
+        // Remove tudo que não seja número ou vírgula
+        valor = valor.replace(/[^0-9,]/g, "");
 
-    <div class="mb-3" id="formaPagamentoDiv" style="display:@(tipoSelecionado == "Despesa" ? "block" : "none")">
-        <label>Forma de Pagamento</label>
-        <select class="form-control" name="FormaPagamento">
-            <option value="">Selecione</option>
-            <option value="Dinheiro">Dinheiro</option>
-            <option value="Cartão">Cartão</option>
-            <option value="PIX">PIX</option>
-            <option value="Boleto">Boleto</option>
-        </select>
-    </div>
+        // Separar inteiro e decimal
+        let partes = valor.split(',');
+        let inteiro = partes[0] || "0";
+        let decimal = partes[1] || "";
 
-    <button type="submit" class="btn btn-primary">Salvar</button>
-</form>
+        // Limitar a 2 casas decimais
+        decimal = decimal.substring(0,2);
+
+        // Formatar inteiro com pontos de milhar
+        inteiro = inteiro.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+        valorInput.value = decimal ? `${inteiro},${decimal}` : inteiro;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const tipoSelecionado = document.querySelector('input[name="Tipo"]:checked').value;
+        toggleFormaPagamento(tipoSelecionado);
+
+        const valorInput = document.getElementById('valor');
+        valorInput.addEventListener('input', () => mascaraMoeda(valorInput));
+
+        const form = document.querySelector('form');
+        form.addEventListener('submit', e => {
+            // Converter vírgula para ponto antes de enviar para o backend
+            valorInput.value = valorInput.value.replace(/\./g, '').replace(',', '.');
+        });
+    });
+</script>
