@@ -251,26 +251,6 @@
 
     }
 
-    .title-animated {
-        --border-right: 6px;
-        --text-stroke-color: rgba(255, 255, 255, 0.6);
-        --animation-color: #37a0ff;
-        --fs-size: 2.5em;
-        letter-spacing: 3px;
-        font-size: var(--fs-size);
-        font-family: "Arial", sans-serif;
-        position: relative;
-        text-transform: uppercase;
-        display: inline-block;
-        line-height: 1.2;
-        white-space: normal; /* permite quebra de linha */
-        word-wrap: break-word; /* força quebra se necessário */
-    }
-
-        .title-animated .title-stroke,
-        .title-animated .title-fill {
-            white-space: normal; /* permite quebra de linha */
-        }
 
     /* Ajustes para mobile */
     @@media (max-width: 768px) {
@@ -290,6 +270,26 @@
         padding: 10px 20px;
     }
 
+        .title-animated {
+            --border-right: 6px;
+            --text-stroke-color: rgba(255, 255, 255, 0.6);
+            --animation-color: #37a0ff;
+            --fs-size: 2.5em;
+            letter-spacing: 3px;
+            font-size: var(--fs-size);
+            font-family: "Arial", sans-serif;
+            position: relative;
+            text-transform: uppercase;
+            display: inline-block;
+            line-height: 1.2;
+            white-space: normal; 
+            word-wrap: break-word; 
+        }
+
+            .title-animated .title-stroke,
+            .title-animated .title-fill {
+                white-space: normal; 
+            }
     }
 
 </style>

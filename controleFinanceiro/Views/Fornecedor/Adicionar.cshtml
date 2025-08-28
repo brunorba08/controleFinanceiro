@@ -1,7 +1,6 @@
 ﻿@model ControleFinanceiro.Models.Fornecedor
 
 <style>
-
     .form-box {
         max-width: 500px;
         margin: 50px auto;
@@ -11,11 +10,11 @@
         background-color: #fff;
     }
 
-    .form-box h2 {
-        color: #007bff; 
-        text-align: center;
-        margin-bottom: 25px;
-    }
+        .form-box h2 {
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 25px;
+        }
 
     .btn-voltar {
         margin-bottom: 20px;
@@ -26,15 +25,39 @@
 
 <div class="form-box">
     <h2>Adicionar Fornecedor</h2>
-    <form method="post">
+    <form asp-action="Adicionar" asp-controller="Fornecedor" method="post">
+        @Html.AntiForgeryToken()
+
+        <div asp-validation-summary="All" class="text-danger"></div>
+
         <div class="mb-3">
-            <label>Nome</label>
-            <input type="text" name="Nome" class="form-control" required />
+            <label asp-for="Nome" class="form-label"></label>
+            <input asp-for="Nome" class="form-control" />
+            <span asp-validation-for="Nome" class="text-danger"></span>
         </div>
+
         <div class="mb-3">
-            <label>Contato</label>
-            <input type="text" name="NumeroContato" class="form-control" />
+            <label asp-for="NumeroContato" class="form-label"></label>
+            <input asp-for="NumeroContato" id="NumeroContato" class="form-control" maxlength="11" />
+            <span asp-validation-for="NumeroContato" class="text-danger"></span>
+            <small class="text-muted">Somente números, máximo 11 dígitos.</small>
         </div>
+
         <button type="submit" class="btn btn-success w-100">Salvar</button>
     </form>
 </div>
+
+@section Scripts {
+    <script>
+        const contatoInput = document.getElementById('NumeroContato');
+
+        contatoInput.addEventListener('input', function () {
+            // Remove tudo que não for número
+            this.value = this.value.replace(/\D/g, '');
+            // Limita a 11 dígitos
+            if (this.value.length > 11) {
+                this.value = this.value.slice(0, 11);
+            }
+        });
+    </script>
+}

@@ -13,6 +13,21 @@
 <div class="container">
     <!-- Título -->
     <div class="text-center mb-4">
+       @using System.Text.Json
+
+@model List<ControleFinanceiro.Models.Transacao>
+@{
+    ViewData["Title"] = "Resumo Diário";
+    var hoje = DateTime.Today;
+    var transacoesHoje = Model?.Where(t => t.Data.Date == hoje).OrderBy(t => t.Data).ToList() ?? new List<ControleFinanceiro.Models.Transacao>();
+    var totalGanho = transacoesHoje.Where(t => t.Tipo == "Ganho").Sum(t => t.Valor);
+    var totalDespesa = transacoesHoje.Where(t => t.Tipo == "Despesa").Sum(t => t.Valor);
+    var saldo = totalGanho - totalDespesa;
+}
+
+<div class="container">
+    <!-- Título -->
+    <div class="text-center mb-4">
         <h2>Resumo do Dia - @hoje.ToString("dd/MM/yyyy")</h2>
     </div>
 
@@ -73,7 +88,7 @@
                                 <form asp-action="Excluir" asp-controller="Transacao" method="post" class="d-inline">
                                     @Html.AntiForgeryToken()
                                     <input type="hidden" name="id" value="@t.Id" />
-                                    <button type="submit" class="btn btn-danger btn-sm">
+                                    <button type="button" class="btn btn-danger btn-sm btn-confirm-delete" data-id="@t.Id">
                                         <i class="bi bi-trash"></i> Excluir
                                     </button>
                                 </form>
@@ -85,7 +100,27 @@
         </div>
     </div>
 </div>
-
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="confirmDeleteLabel">Confirmar Exclusão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                Tem certeza que deseja excluir este item? Essa ação não pode ser desfeita.
+            </div>
+            <div class="modal-footer">
+                <form id="deleteForm" asp-action="Excluir" asp-controller="Transacao" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" id="deleteItemId" />
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Sim, Excluir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <br>
 <br>
 
@@ -130,5 +165,174 @@
                 y: { beginAtZero: true }
             }
         }
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const deleteButtons = document.querySelectorAll(".btn-confirm-delete");
+        const modal = new bootstrap.Modal(document.getElementById("confirmDeleteModal"));
+        const deleteItemIdInput = document.getElementById("deleteItemId");
+
+        deleteButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                const id = this.getAttribute("data-id");
+                deleteItemIdInput.value = id;
+                modal.show();
+            });
+        });
+    });
+</script>
+
+    </div>
+
+    <!-- Botões -->
+    <div class="mb-4 text-center">
+        <a href="/Transacao/Adicionar?tipo=Ganho" class="btn btn-success me-2">
+            <i class="bi bi-plus-circle"></i> Adicionar Ganho
+        </a>
+        <a href="/Transacao/Adicionar?tipo=Despesa" class="btn btn-danger">
+            <i class="bi bi-dash-circle"></i> Adicionar Despesa
+        </a>
+    </div>
+
+    <!-- Resumo valores -->
+    <div class="row mb-4">
+        <div class="col-md-12 text-center">
+            <h5>Total Ganhos: <span class="text-success">@totalGanho.ToString("C")</span></h5>
+            <h5>Total Despesas: <span class="text-danger">@totalDespesa.ToString("C")</span></h5>
+            <h5>Saldo: <span>@saldo.ToString("C")</span></h5>
+        </div>
+    </div>
+
+    <!-- Gráfico e Histórico lado a lado -->
+    <div class="row">
+        <!-- Gráfico -->
+        <div class="col-md-6">
+            <h5 class="text-center">Gráfico</h5>
+            <canvas id="graficoResumo"></canvas>
+        </div>
+
+        <!-- Histórico -->
+        <div class="col-md-6">
+            <h5 class="text-center">Histórico do Dia</h5>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Descrição</th>
+                        <th>Valor</th>
+                        <th>Hora</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var t in transacoesHoje)
+                    {
+                        <tr>
+                            <td>@t.Tipo</td>
+                            <td>@t.Descricao</td>
+                            <td class="@(t.Tipo == "Ganho" ? "text-success" : "text-danger")">
+                                @(t.Tipo == "Ganho" ? "+" : "-") @t.Valor.ToString("C")
+                            </td>
+                            <td>@t.Data.ToString("HH:mm")</td>
+                            <td>
+                                <a href="/Transacao/Editar/@t.Id" class="btn btn-warning btn-sm me-1">
+                                    <i class="bi bi-pencil-square"></i> Editar
+                                </a>
+                                <form asp-action="Excluir" asp-controller="Transacao" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@t.Id" />
+                                    <button type="button" class="btn btn-danger btn-sm btn-confirm-delete" data-id="@t.Id">
+                                        <i class="bi bi-trash"></i> Excluir
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="confirmDeleteLabel">Confirmar Exclusão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                Tem certeza que deseja excluir este item? Essa ação não pode ser desfeita.
+            </div>
+            <div class="modal-footer">
+                <form id="deleteForm" asp-action="Excluir" asp-controller="Transacao" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" id="deleteItemId" />
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Sim, Excluir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<br>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const labels = @Html.Raw(JsonSerializer.Serialize(transacoesHoje.Select(t => t.Data.ToString("HH:mm"))));
+    const ganhos = @Html.Raw(JsonSerializer.Serialize(transacoesHoje.Select(t => t.Tipo == "Ganho" ? t.Valor : 0)));
+    const despesas = @Html.Raw(JsonSerializer.Serialize(transacoesHoje.Select(t => t.Tipo == "Despesa" ? t.Valor : 0)));
+
+    const ctx = document.getElementById('graficoResumo').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Ganhos',
+                    data: ganhos,
+                    borderColor: '#28a745',
+                    backgroundColor: 'rgba(40,167,69,0.2)',
+                    tension: 0.3,
+                    fill: true
+                },
+                {
+                    label: 'Despesas',
+                    data: despesas,
+                    borderColor: '#dc3545',
+                    backgroundColor: 'rgba(220,53,69,0.2)',
+                    tension: 0.3,
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' },
+                title: { display: true, text: 'Ganhos vs Despesas Hoje' }
+            },
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const deleteButtons = document.querySelectorAll(".btn-confirm-delete");
+        const modal = new bootstrap.Modal(document.getElementById("confirmDeleteModal"));
+        const deleteItemIdInput = document.getElementById("deleteItemId");
+
+        deleteButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                const id = this.getAttribute("data-id");
+                deleteItemIdInput.value = id;
+                modal.show();
+            });
+        });
     });
 </script>
