@@ -1,6 +1,9 @@
-﻿using ControleFinanceiro.Models;
+﻿using controleFinanceiro.Models;
+using ControleFinanceiro.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ControleFinanceiro.Controllers
@@ -15,6 +18,7 @@ namespace ControleFinanceiro.Controllers
             _context = context;
         }
 
+        // LISTAR
         public IActionResult Index(DateTime? dataInicial, DateTime? dataFinal, string filtroPeriodo)
         {
             int? usuarioId = HttpContextAtivo.Session.GetInt32("UsuarioId");
@@ -47,9 +51,11 @@ namespace ControleFinanceiro.Controllers
             var lista = transacoes.OrderByDescending(t => t.Data).ToList();
             ViewBag.UsuarioId = usuarioId;
 
-            return View(lista);
+            // nunca manda null pra view
+            return View(lista ?? new List<Transacao>());
         }
 
+        // ADICIONAR
         [HttpGet]
         public IActionResult Adicionar()
         {
@@ -87,6 +93,7 @@ namespace ControleFinanceiro.Controllers
             return RedirectToAction("Index");
         }
 
+        // EDITAR
         [HttpGet]
         public IActionResult Editar(int id)
         {
@@ -133,6 +140,7 @@ namespace ControleFinanceiro.Controllers
             return View(model);
         }
 
+        // EXCLUIR
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Excluir(int id)
@@ -154,5 +162,27 @@ namespace ControleFinanceiro.Controllers
             TempData["Sucesso"] = "Transação excluída com sucesso!";
             return RedirectToAction("Index");
         }
+
+        public IActionResult ResumoDiario(DateTime? dataInicial, DateTime? dataFinal)
+        {
+            // Se não passou datas, usa hoje
+            var hoje = DateTime.Today;
+            var inicio = dataInicial ?? hoje;
+            var fim = dataFinal ?? hoje;
+
+            // Busca transações do período
+            var transacoes = _context.Transacoes
+                .Where(t => t.Data.Date >= inicio && t.Data.Date <= fim)
+                .OrderBy(t => t.Data)
+                .ToList();
+
+            // Passa datas para ViewBag (para inputs)
+            ViewBag.DataInicial = inicio;
+            ViewBag.DataFinal = fim;
+
+            return View(transacoes);
+        }
+
+
     }
 }

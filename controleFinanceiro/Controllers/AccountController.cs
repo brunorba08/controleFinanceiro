@@ -79,7 +79,7 @@ namespace ControleFinanceiro.Controllers
                 _context.Usuarios.Add(usuario);
                 _context.SaveChanges();
 
-                TempData["Sucesso"] = "Usuário cadastrado com sucesso!";
+                TempData["Sucesso"] = "Usuario cadastrado com sucesso!";
                 return RedirectToAction("Register");
             }
 
