@@ -55,7 +55,7 @@ namespace ControleFinanceiro.Controllers
             else if (tipoFiltro == "mes")
             {
                 DateTime mesFiltro = !string.IsNullOrEmpty(dataFiltro)
-                                     ? DateTime.Parse(dataFiltro + "-01") // para converter month
+                                     ? DateTime.Parse(dataFiltro + "-01") 
                                      : DateTime.Today;
 
                 int mes = mesFiltro.Month;

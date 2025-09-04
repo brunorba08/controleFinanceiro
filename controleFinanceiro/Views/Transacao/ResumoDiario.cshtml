@@ -22,6 +22,16 @@
         <button type="submit" class="btn btn-primary">Filtrar</button>
     </form>
 
+    <!-- Botões de adicionar transação -->
+    <div class="mb-4 text-center">
+        <a href="/Transacao/Adicionar?tipo=Ganho" class="btn btn-success me-2">
+            <i class="bi bi-plus-circle"></i> Adicionar Ganho
+        </a>
+        <a href="/Transacao/Adicionar?tipo=Despesa" class="btn btn-danger">
+            <i class="bi bi-dash-circle"></i> Adicionar Despesa
+        </a>
+    </div>
+
     <!-- Resumo valores -->
     <div class="row mb-4 text-center">
         <div class="col-md-12">
@@ -56,7 +66,7 @@
                             <td class="@(t.Tipo == "Ganho" ? "text-success" : "text-danger")">
                                 @(t.Tipo == "Ganho" ? "+" : "-") @t.Valor.ToString("C")
                             </td>
-                            <td>@t.Data.ToString("HH:mm")</td>
+                            <td>@t.Data.ToString("dd/MM/yyyy HH:mm")</td>
                             <td>
                                 <a href="/Transacao/Editar/@t.Id" class="btn btn-warning btn-sm">Editar</a>
                                 <form asp-action="Excluir" asp-controller="Transacao" method="post" class="d-inline">
