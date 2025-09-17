@@ -90,7 +90,7 @@
     const despesas = @Html.Raw(JsonSerializer.Serialize(transacoes.Select(t => t.Tipo == "Despesa" ? t.Valor : 0)));
 
     new Chart(document.getElementById('graficoResumo').getContext('2d'), {
-        type: 'line',
+        type: 'line',ww
         data: {
             labels: labels,
             datasets: [
